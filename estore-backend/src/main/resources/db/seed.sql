@@ -1,0 +1,2 @@
+-- Données de seed (optionnel — chargées par DataSeeder)
+-- Ce fichier n'est pas exécuté automatiquement, il sert de référence.
