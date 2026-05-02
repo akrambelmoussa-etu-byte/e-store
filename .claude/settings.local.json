@@ -4,7 +4,8 @@
       "Bash(git init *)",
       "Bash(git add *)",
       "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"chore: initial scaffold\")",
-      "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"feat\\(backend\\): bootstrap spring boot project\")"
+      "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"feat\\(backend\\): bootstrap spring boot project\")",
+      "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"feat\\(customer\\): auth + profile\")"
     ]
   }
 }
