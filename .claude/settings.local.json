@@ -5,7 +5,9 @@
       "Bash(git add *)",
       "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"chore: initial scaffold\")",
       "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"feat\\(backend\\): bootstrap spring boot project\")",
-      "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"feat\\(customer\\): auth + profile\")"
+      "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"feat\\(customer\\): auth + profile\")",
+      "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q -m \"feat\\(catalog\\): products and categories\")",
+      "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q --allow-empty -m \"feat\\(inventory\\): stock management\")"
     ]
   }
 }
