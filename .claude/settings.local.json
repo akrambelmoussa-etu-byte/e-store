@@ -15,7 +15,11 @@
       "Bash(mvn -q test)",
       "Bash(mvn test *)",
       "Bash(npm install *)",
-      "Bash(npx ng *)"
+      "Bash(npx ng *)",
+      "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q --allow-empty -m \"docs: complete README and final polish\")",
+      "Bash(pip install *)",
+      "Bash(python -c \"import reportlab; print\\('reportlab', reportlab.__version__\\)\")",
+      "Bash(python generate_pdfs.py)"
     ]
   }
 }
