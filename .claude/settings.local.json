@@ -19,7 +19,9 @@
       "Bash(git -c user.email=akram@estore.ma -c user.name=\"Akram Belmoussa\" commit -q --allow-empty -m \"docs: complete README and final polish\")",
       "Bash(pip install *)",
       "Bash(python -c \"import reportlab; print\\('reportlab', reportlab.__version__\\)\")",
-      "Bash(python generate_pdfs.py)"
+      "Bash(python generate_pdfs.py)",
+      "Bash(python -c \"import pptx; print\\('python-pptx', pptx.__version__\\)\")",
+      "Bash(python generate_presentation.py)"
     ]
   }
 }
