@@ -23,7 +23,9 @@
       "Bash(python -c \"import pptx; print\\('python-pptx', pptx.__version__\\)\")",
       "Bash(python generate_presentation.py)",
       "Bash(find \"C:/Users/belmo\" -name \"E-Store_Digital_Blueprint*\" 2>/dev/null | head -5; find \"C:/Users/belmo/Downloads\" -name \"*.pdf\" 2>/dev/null | head -10)",
-      "Bash(python generate_advanced_presentation.py)"
+      "Bash(python generate_advanced_presentation.py)",
+      "Bash(python generate_keynote_presentation.py)",
+      "Bash(cd /tmp/pptx_check && head -1 ppt/slides/slide3.xml | head -c 200; echo \"\"; echo \"---\"; grep -o 'p14:morph[^/]*' ppt/slides/slide3.xml | head -3)"
     ]
   }
 }
