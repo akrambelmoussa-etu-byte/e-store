@@ -1,0 +1,2044 @@
+% =====================================================================
+%  RAPPORT DE PROJET — E-STORE
+%  Module : Full-Stack
+%  Encadrant : Pr. Omar Zahour
+%  Établissement : FSBM — Université Hassan II de Casablanca
+%  Auteurs : Akram Belmoussa & Nouhaila Ben Soumane
+%  Année universitaire : 2025-2026
+% =====================================================================
+%
+%  Compilation :
+%    pdflatex rapport-estore.tex
+%    pdflatex rapport-estore.tex   (deux passes pour les références)
+%
+%  Ou plus simple : importer ce fichier sur Overleaf (overleaf.com)
+% =====================================================================
+
+\documentclass[11pt,a4paper,oneside]{report}
+
+% --- Encodage et langue ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% --- Mise en page ---
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+
+% --- Couleurs ---
+\usepackage{xcolor}
+\definecolor{primaryblue}{HTML}{0D6EFD}
+\definecolor{darknavy}{HTML}{0A2540}
+\definecolor{accentgreen}{HTML}{198754}
+\definecolor{accentorange}{HTML}{F77F00}
+\definecolor{lightgray}{HTML}{F5F7FA}
+\definecolor{borderlight}{HTML}{DEE2E6}
+\definecolor{codebg}{HTML}{F8F9FA}
+\definecolor{codecomment}{HTML}{6A737D}
+\definecolor{codekeyword}{HTML}{D73A49}
+\definecolor{codestring}{HTML}{032F62}
+\definecolor{codenumber}{HTML}{005CC5}
+
+% --- Graphismes et tableaux ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage{caption}
+\captionsetup[figure]{labelfont={bf,color=primaryblue}, textfont=it, font=small}
+\captionsetup[table]{labelfont={bf,color=primaryblue}, textfont=it, font=small}
+
+% --- Listings (code) ---
+\usepackage{listings}
+\lstset{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{codecomment}\itshape,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  numberstyle=\tiny\color{codecomment},
+  numbers=left,
+  numbersep=10pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=leftline,
+  framesep=8pt,
+  rulecolor=\color{primaryblue},
+  framerule=2pt,
+  xleftmargin=20pt,
+  xrightmargin=5pt,
+  belowskip=1em,
+  aboveskip=1em
+}
+
+\lstdefinelanguage{Java2}{
+  morekeywords={var,record,sealed,permits,yield},
+  keywordstyle=\color{codekeyword}\bfseries,
+  language=Java
+}
+
+\lstdefinelanguage{TypeScript}{
+  morekeywords={
+    abstract,as,async,await,break,case,catch,class,const,continue,declare,
+    default,delete,do,else,enum,export,extends,finally,for,from,function,
+    get,if,implements,import,in,instanceof,interface,is,let,module,namespace,
+    new,of,package,private,protected,public,readonly,return,set,static,
+    super,switch,throw,try,type,typeof,var,void,while,with,yield,
+    string,number,boolean,any,unknown,never,null,undefined,this,
+    inject,signal,computed,effect
+  },
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]`,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape
+}
+
+\lstdefinestyle{javastyle}{language=Java2, basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{tsstyle}{language=TypeScript, basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{xmlstyle}{language=XML, basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{shellstyle}{language=bash, basicstyle=\ttfamily\footnotesize, keywordstyle=\color{codekeyword}}
+\lstdefinestyle{propertiesstyle}{
+  basicstyle=\ttfamily\footnotesize,
+  morekeywords={spring,server,jwt,logging},
+  keywordstyle=\color{primaryblue}\bfseries,
+  commentstyle=\color{codecomment}\itshape,
+  morecomment=[l]{\#}
+}
+
+% --- Boîtes colorées ---
+\usepackage[most]{tcolorbox}
+\newtcolorbox{infobox}[1][]{
+  colback=primaryblue!8, colframe=primaryblue,
+  boxrule=0.4pt, arc=2pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries, title=\faIcon{info-circle}~Note,#1
+}
+\newtcolorbox{tipbox}[1][]{
+  colback=accentgreen!8, colframe=accentgreen,
+  boxrule=0.4pt, arc=2pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries, title=Astuce,#1
+}
+\newtcolorbox{warnbox}[1][]{
+  colback=accentorange!10, colframe=accentorange,
+  boxrule=0.4pt, arc=2pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries, title=Attention,#1
+}
+
+% --- Titres de chapitres et sections ---
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{primaryblue}}
+  {\filleft\Large CHAPITRE \thechapter}
+  {1ex}
+  {\titlerule[1.5pt]\vspace{1ex}\filleft}
+  [\vspace{0.5ex}\titlerule[0.5pt]]
+
+\titleformat{\section}
+  {\Large\bfseries\color{darknavy}}
+  {\thesection}{1em}{}[{\titlerule[0.4pt]}]
+
+\titleformat{\subsection}
+  {\large\bfseries\color{primaryblue}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{darknavy}}
+  {\thesubsubsection}{1em}{}
+
+% --- En-têtes et pieds de page ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{primaryblue}{\textsc{E-Store}}}
+\fancyhead[R]{\small\textit{\leftmark}}
+\fancyfoot[L]{\small\textcolor{codecomment}{Belmoussa \& Ben Soumane — 2025-2026}}
+\fancyfoot[R]{\small\textbf{\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.2pt}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[L]{\small\textcolor{codecomment}{Belmoussa \& Ben Soumane — 2025-2026}}
+  \fancyfoot[R]{\small\textbf{\thepage}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.2pt}
+}
+
+% --- Hyperliens ---
+\usepackage[colorlinks=true,linkcolor=primaryblue,urlcolor=primaryblue,
+            citecolor=primaryblue,filecolor=primaryblue,
+            pdftitle={Rapport E-Store},
+            pdfauthor={Akram Belmoussa & Nouhaila Ben Soumane}]{hyperref}
+
+% --- TikZ pour les schémas ---
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,fit,backgrounds,decorations.pathreplacing,
+                shapes.geometric,calc,arrows.meta}
+
+% --- Liste des abréviations ---
+\usepackage{enumitem}
+
+% =====================================================================
+%  DOCUMENT
+% =====================================================================
+\begin{document}
+
+% --- PAGE DE GARDE ---
+\begin{titlepage}
+  \begin{center}
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[primaryblue] ([yshift=-2cm]current page.north west) rectangle ([yshift=-2.3cm]current page.north east);
+    \fill[primaryblue] ([yshift=2.3cm]current page.south west) rectangle ([yshift=2cm]current page.south east);
+  \end{tikzpicture}
+
+  \vspace*{1cm}
+  {\large\textsc{Royaume du Maroc}}\\[0.2cm]
+  {\large\textsc{Université Hassan II de Casablanca}}\\[0.2cm]
+  {\large\textsc{Faculté des Sciences Ben M'Sick}}\\[0.6cm]
+
+  \rule{\linewidth}{1pt}\\[0.3cm]
+  {\Large \textbf{Département d'Informatique}}\\[0.2cm]
+  {\large Master/Licence — Module \textbf{Full-Stack}}\\
+  \rule{\linewidth}{1pt}\\[2cm]
+
+  \vfill
+  {\Huge\bfseries\color{primaryblue} Rapport de Projet de Fin de Module}\\[1cm]
+  \rule[0.5cm]{0.4\linewidth}{0.4pt}\\[0.3cm]
+  {\Huge\bfseries\color{darknavy} E-STORE}\\[0.4cm]
+  {\LARGE\itshape Conception et réalisation d'une plateforme}\\[0.2cm]
+  {\LARGE\itshape e-commerce full-stack à persistance hybride}\\[0.5cm]
+  \rule{0.4\linewidth}{0.4pt}\\[2cm]
+  \vfill
+
+  \begin{minipage}{0.46\textwidth}
+    \begin{flushleft}
+      \textbf{\large Réalisé par :}\\[0.2cm]
+      Akram \textsc{Belmoussa}\\
+      Nouhaila \textsc{Ben Soumane}
+    \end{flushleft}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.46\textwidth}
+    \begin{flushright}
+      \textbf{\large Encadré par :}\\[0.2cm]
+      Pr.\ Omar \textsc{Zahour}\\
+      Faculté des Sciences Ben M'Sick
+    \end{flushright}
+  \end{minipage}
+
+  \vspace{2cm}
+  {\large Année universitaire \textbf{2025 -- 2026}}
+  \end{center}
+\end{titlepage}
+
+% --- DÉDICACES ---
+\thispagestyle{empty}
+\vspace*{2cm}
+\begin{flushright}\itshape\large
+À nos parents, pour leur soutien indéfectible.\\[0.4cm]
+À nos enseignants, pour le savoir partagé.\\[0.4cm]
+À nos camarades de promotion, pour la collaboration.\\[0.4cm]
+\end{flushright}
+\vfill
+\begin{center}\itshape
+\textbf{Akram \& Nouhaila}
+\end{center}
+\newpage
+
+% --- REMERCIEMENTS ---
+\thispagestyle{plain}
+\chapter*{Remerciements}
+\addcontentsline{toc}{chapter}{Remerciements}
+
+Au terme de ce projet, il nous est agréable d'exprimer nos sincères
+remerciements à toutes les personnes qui ont contribué, de près ou de loin,
+à sa réalisation.
+
+Nous tenons en premier lieu à remercier notre encadrant pédagogique,
+\textbf{Pr.\ Omar Zahour}, pour la qualité de son enseignement, sa
+disponibilité, ses conseils avisés et la rigueur scientifique qu'il a su
+nous transmettre tout au long de ce module. Ses orientations ont été
+déterminantes dans la définition du périmètre du projet et dans les choix
+techniques que nous avons opérés.
+
+Nous remercions également l'ensemble du \textbf{corps professoral} de la
+Faculté des Sciences Ben M'Sick — Université Hassan II de Casablanca, dont
+les enseignements antérieurs en programmation orientée objet, en bases de
+données, en génie logiciel et en architectures web ont constitué les
+fondations sur lesquelles ce travail a pu s'élever.
+
+Nos remerciements vont enfin à nos \textbf{familles} et à nos
+\textbf{camarades de promotion}, pour leur soutien constant, leurs
+relectures attentives et l'émulation intellectuelle qui nous a tirés vers
+le haut.
+
+% --- RÉSUMÉ ---
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+
+Ce rapport présente la conception et la réalisation de \textbf{E-Store},
+une application e-commerce complète développée dans le cadre du module
+\textit{Full-Stack} de la Faculté des Sciences Ben M'Sick. Le projet adopte
+une architecture rigoureuse en \textbf{trois couches techniques}
+(présentation, logique métier, accès aux données) et un découpage en
+\textbf{cinq domaines fonctionnels} suivant les principes du
+\textit{Domain-Driven Design}.
+
+L'application implémente l'ensemble du parcours utilisateur d'un site
+marchand : inscription, authentification, navigation dans un catalogue,
+gestion d'un panier, validation transactionnelle de commandes et dépôt
+d'avis produits. La particularité technique majeure réside dans la mise en
+\oe uvre d'une \textbf{persistance hybride} associant un système relationnel
+(MySQL ou H2) pour les données transactionnelles à un système documentaire
+(MongoDB) pour les avis utilisateurs.
+
+Le backend repose sur \textbf{Spring Boot 3.3} et \textbf{Spring Security 6}
+avec une authentification stateless par jeton \textbf{JWT}. Le frontend
+exploite les nouveautés d'\textbf{Angular 17} (composants \textit{standalone},
+\textit{signals}, lazy loading) et le framework \textit{Bootstrap 5}. Une
+suite de neuf tests unitaires JUnit 5 / Mockito couvre les services métier
+critiques.
+
+\textbf{Mots-clés :} Spring Boot, Angular, JWT, MongoDB, Architecture en
+couches, Domain-Driven Design, Persistance hybride, ACID, REST.
+
+% --- TABLE DES MATIÈRES ---
+\tableofcontents
+\listoffigures
+\listoftables
+
+% --- ABRÉVIATIONS ---
+\chapter*{Liste des abréviations}
+\addcontentsline{toc}{chapter}{Liste des abréviations}
+
+\begin{description}[leftmargin=4cm,style=nextline]
+  \item[ACID] Atomicity, Consistency, Isolation, Durability
+  \item[API] Application Programming Interface
+  \item[BCrypt] Blowfish Crypt (algorithme de hachage)
+  \item[CRUD] Create, Read, Update, Delete
+  \item[CORS] Cross-Origin Resource Sharing
+  \item[DDD] Domain-Driven Design
+  \item[DTO] Data Transfer Object
+  \item[ERD] Entity Relationship Diagram
+  \item[FSBM] Faculté des Sciences Ben M'Sick
+  \item[H2] Base de données relationnelle in-memory en Java
+  \item[HTTP] HyperText Transfer Protocol
+  \item[IDE] Integrated Development Environment
+  \item[JPA] Jakarta Persistence API
+  \item[JSON] JavaScript Object Notation
+  \item[JVM] Java Virtual Machine
+  \item[JWT] JSON Web Token
+  \item[MCD] Modèle Conceptuel de Données
+  \item[NoSQL] Not Only SQL
+  \item[ORM] Object-Relational Mapping
+  \item[REST] Representational State Transfer
+  \item[SGBD] Système de Gestion de Bases de Données
+  \item[SPA] Single Page Application
+  \item[SQL] Structured Query Language
+  \item[UI/UX] User Interface / User eXperience
+  \item[XML] eXtensible Markup Language
+\end{description}
+
+% =====================================================================
+%  INTRODUCTION GÉNÉRALE
+% =====================================================================
+\chapter*{Introduction générale}
+\addcontentsline{toc}{chapter}{Introduction générale}
+\markboth{INTRODUCTION GÉNÉRALE}{}
+
+L'avènement du commerce électronique a profondément remodelé les pratiques
+commerciales mondiales. Selon les estimations de la
+\textit{Confédération Marocaine du Commerce Électronique}, le volume des
+transactions en ligne au Maroc a franchi le cap des \textbf{20 milliards de
+dirhams} en 2024, avec une croissance annuelle moyenne supérieure à 25\%.
+Cette dynamique s'accompagne d'une exigence accrue en termes
+d'\textit{ergonomie}, de \textit{performance} et de \textit{sécurité} des
+plateformes marchandes.
+
+Le module \textbf{Full-Stack}, dispensé sous la direction du
+\textbf{Pr.\ Omar Zahour}, vise à doter les étudiants des compétences
+nécessaires à la conception et à la réalisation de telles applications
+\textit{de bout en bout} — du modèle de données jusqu'à l'interface
+utilisateur, en passant par la logique métier, la sécurité et le
+déploiement.
+
+C'est dans ce contexte que s'inscrit le présent projet, baptisé
+\textbf{E-Store}. Il s'agit d'une mise en pratique exhaustive des
+enseignements théoriques par la construction d'une application e-commerce
+complète, intégrant les meilleurs standards de l'industrie en 2025 :
+Spring Boot 3.3, Angular 17, persistance hybride relationnel/documentaire,
+authentification JWT, tests unitaires automatisés et conteneurisation
+Docker.
+
+\section*{Objectifs du projet}
+
+Ce projet poursuit cinq objectifs principaux :
+
+\begin{enumerate}
+  \item \textbf{Maîtriser une architecture full-stack moderne} en
+    appliquant un découpage en couches et en domaines fonctionnels rigoureux.
+  \item \textbf{Illustrer la persistance hybride} en faisant cohabiter, au
+    sein d'une même application, un SGBD relationnel (MySQL) et un SGBD
+    documentaire (MongoDB).
+  \item \textbf{Appliquer les bonnes pratiques} de génie logiciel : DTOs,
+    transactions, validation, gestion centralisée des erreurs, tests unitaires.
+  \item \textbf{Sécuriser l'application} par un mécanisme stateless reposant
+    sur Spring Security 6, BCrypt et JWT.
+  \item \textbf{Produire une interface utilisateur réactive} avec Angular 17
+    en mode \textit{standalone}, Bootstrap 5 et signals.
+\end{enumerate}
+
+\section*{Plan du document}
+
+Le présent rapport s'articule autour de \textbf{neuf chapitres} :
+
+\begin{itemize}[leftmargin=*]
+  \item Le \textbf{chapitre 1} pose le contexte du projet et formalise le
+    cahier des charges fonctionnel et non fonctionnel.
+  \item Le \textbf{chapitre 2} décrit l'architecture générale, le découpage
+    en couches et en domaines.
+  \item Le \textbf{chapitre 3} justifie les choix techniques opérés pour
+    chaque brique de la stack.
+  \item Les \textbf{chapitres 4, 5 et 6} détaillent respectivement la
+    réalisation du backend, du module de sécurité et du frontend.
+  \item Le \textbf{chapitre 7} expose la stratégie de tests et les résultats
+    obtenus.
+  \item Le \textbf{chapitre 8} traite du déploiement, de la conteneurisation
+    et de l'intégration continue.
+  \item Le \textbf{chapitre 9} relate les difficultés rencontrées et les
+    solutions mises en \oe uvre.
+  \item Une \textbf{conclusion générale} dresse le bilan du travail
+    accompli et trace les perspectives d'évolution.
+\end{itemize}
+
+% =====================================================================
+%  CHAPITRE 1 : CONTEXTE ET CAHIER DES CHARGES
+% =====================================================================
+\chapter{Contexte et cahier des charges}
+
+\section{Contexte académique}
+
+Ce projet est réalisé dans le cadre du module \textit{Full-Stack} du
+département d'informatique de la Faculté des Sciences Ben M'Sick. Ce module
+intervient en fin de cursus, après que les étudiants ont acquis les bases
+en \textit{programmation orientée objet} (Java), \textit{bases de données
+relationnelles} (SQL, normalisation, MERISE), \textit{développement web
+côté client} (HTML, CSS, JavaScript) et \textit{génie logiciel}
+(UML, patrons de conception).
+
+L'objectif pédagogique est triple :
+\begin{enumerate}
+  \item \textbf{Intégrer} les acquis des modules précédents au sein d'un
+    projet de taille significative.
+  \item \textbf{Découvrir} les frameworks de production utilisés dans
+    l'industrie (Spring Boot, Angular).
+  \item \textbf{Pratiquer} le travail en binôme sur un dépôt Git partagé,
+    en respectant des conventions de nommage et de commit.
+\end{enumerate}
+
+\section{Étude du marché et de l'existant}
+
+\subsection{Marché du commerce électronique au Maroc}
+
+Le commerce électronique marocain connaît une expansion soutenue.
+Les plateformes leaders du marché — \textit{Jumia}, \textit{Avito},
+\textit{Marjane.ma}, \textit{Decathlon.ma} — partagent un certain nombre de
+\textbf{fonctionnalités-types} qui constituent l'état de l'art :
+authentification utilisateur, navigation dans un catalogue catégorisé,
+recherche textuelle et par filtres, gestion d'un panier persistant,
+processus de commande sécurisé, suivi d'historique, dépôt et consultation
+d'avis clients, gestion de favoris.
+
+\subsection{Forces et faiblesses des plateformes existantes}
+
+\begin{table}[htbp]
+\centering
+\caption{Analyse comparative succincte de plateformes existantes}
+\label{tab:concurrents}
+\small
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Critère} & \textbf{Forces communes} & \textbf{Faiblesses récurrentes}\\
+\midrule
+Catalogue   & Richesse, pagination     & Filtres parfois lents, pas toujours pertinents \\
+Panier      & Persistance, modification quantité & Synchronisation multi-appareils inégale \\
+Sécurité    & HTTPS, JWT/OAuth         & Mots de passe faibles autorisés \\
+Performance & CDN, cache               & Surcharge en période de soldes \\
+Avis        & Notation par étoiles     & Modération absente ou tardive \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+E-Store ne prétend évidemment pas rivaliser avec ces géants, mais propose
+une \textit{maquette pédagogique fonctionnelle} qui en reprend les
+fondamentaux dans un périmètre maîtrisable.
+
+\section{Cahier des charges fonctionnel}
+
+\subsection{Acteurs}
+
+L'application distingue deux profils d'utilisateurs :
+
+\begin{itemize}
+  \item \textbf{USER} (utilisateur standard) : peut s'inscrire, se connecter,
+    consulter le catalogue, ajouter au panier, passer commande, consulter
+    son historique et déposer des avis.
+  \item \textbf{ADMIN} (administrateur) : dispose, en plus, des droits de
+    création, modification et suppression sur les catégories, les produits
+    et le stock.
+\end{itemize}
+
+\subsection{Cas d'usage principaux}
+
+\begin{table}[htbp]
+\centering
+\caption{Cas d'usage fonctionnels couverts par E-Store}
+\label{tab:usecases}
+\small
+\begin{tabularx}{\textwidth}{p{3.5cm}lX}
+\toprule
+\textbf{Cas d'usage} & \textbf{Acteur} & \textbf{Description}\\
+\midrule
+Inscription   & Visiteur & Création d'un compte avec email unique et mot de passe ($\geq$6 car.)\\
+Connexion     & Utilisateur & Authentification email/mot de passe, retour d'un JWT 24h\\
+Profil        & USER & Consultation et mise à jour du profil (téléphone, adresse)\\
+Catalogue     & Tous & Liste paginée, recherche textuelle, filtre par catégorie\\
+Fiche produit & Tous & Détail (prix, stock, image), liste des avis\\
+Panier        & USER & Ajout, modification, suppression, vidage\\
+Commande      & USER & Validation transactionnelle (ACID), historique\\
+Avis          & USER & Dépôt (note 1-5 + commentaire), consultation\\
+Catégorie/Produit & ADMIN & CRUD complet\\
+Stock         & ADMIN & Lecture publique, mise à jour réservée\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Cahier des charges non fonctionnel}
+
+\subsection{Performance}
+Les pages doivent se charger en moins de \textbf{2 secondes} sur connexion
+nominale (4G ou Wi-Fi). Le \textit{bundle initial} JavaScript doit rester
+sous \textbf{50 ko} grâce au lazy loading.
+
+\subsection{Sécurité}
+\begin{itemize}
+  \item Mots de passe hachés en \textbf{BCrypt} (jamais en clair).
+  \item Authentification stateless par \textbf{JWT signé HMAC-SHA256},
+    expiration \textbf{24 heures}.
+  \item Endpoints d'administration protégés par \texttt{@PreAuthorize}.
+  \item Validation systématique des entrées (\textit{Bean Validation}).
+  \item CORS restreint à l'origine \texttt{localhost:4200} en développement.
+\end{itemize}
+
+\subsection{Maintenabilité}
+\begin{itemize}
+  \item Code conforme aux conventions Java/TypeScript.
+  \item Découpage en cinq domaines fonctionnels.
+  \item Au moins \textbf{neuf tests unitaires} couvrant les services métier
+    critiques.
+  \item Documentation interne (Javadoc, README, commentaires).
+\end{itemize}
+
+\subsection{Portabilité}
+\begin{itemize}
+  \item Démarrage possible \textbf{sans installation préalable} grâce au
+    profil \texttt{dev} (H2 in-memory).
+  \item Démarrage Docker en une commande pour le profil \texttt{prod}.
+  \item Compatibilité multi-OS (Windows, macOS, Linux).
+\end{itemize}
+
+\section{Méthodologie de travail}
+
+Nous avons retenu une approche \textbf{itérative légère}, inspirée d'Agile
+mais adaptée au contexte d'un binôme étudiant. Le projet a été découpé en
+\textbf{quinze étapes incrémentales}, chacune se concluant par un commit
+Git significatif. La répartition des rôles a été la suivante :
+
+\begin{itemize}
+  \item \textbf{Akram Belmoussa} — Backend (Spring Boot, JPA, Sécurité JWT),
+    intégration MongoDB, tests unitaires.
+  \item \textbf{Nouhaila Ben Soumane} — Frontend (Angular 17, Bootstrap),
+    modélisation des données, documentation et rapport.
+  \item \textbf{Travail commun} — Architecture, design API, débogage,
+    revue de code.
+\end{itemize}
+
+% =====================================================================
+%  CHAPITRE 2 : ARCHITECTURE ET CONCEPTION
+% =====================================================================
+\chapter{Architecture et conception}
+
+\section{Architecture générale en trois couches}
+
+E-Store adopte une architecture \textbf{n-tiers classique} en trois couches,
+qui présente l'avantage de séparer clairement les responsabilités et de
+faciliter la maintenance. La figure~\ref{fig:archi-3layers} en donne une
+vue synthétique.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=0.6cm, every node/.style={font=\small}]
+  \tikzstyle{layer} = [rectangle, rounded corners=5pt, draw=primaryblue,
+                       fill=primaryblue!10, text width=11cm, minimum height=1.5cm,
+                       align=center, inner sep=8pt]
+  \tikzstyle{tech} = [font=\itshape\small, color=darknavy]
+  \tikzstyle{arrow} = [-{Stealth}, thick, color=primaryblue]
+
+  \node[layer] (presentation) {%
+    \textbf{Couche Présentation}\\
+    \tech{Angular 17 standalone — Bootstrap 5 — TypeScript — RxJS / Signals}};
+  \node[layer, below=of presentation] (business) {%
+    \textbf{Couche Logique métier}\\
+    \tech{Spring Boot 3.3 — Controllers REST — Services — DTOs — Spring Security 6}};
+  \node[layer, below=of business] (data) {%
+    \textbf{Couche Accès aux données}\\
+    \tech{Spring Data JPA — Spring Data MongoDB — MySQL 8 / H2 — MongoDB 7}};
+
+  \draw[arrow] (presentation) -- node[right, tech] {HTTP / JSON} (business);
+  \draw[arrow] (business) -- node[right, tech] {SQL / BSON} (data);
+\end{tikzpicture}
+\caption{Architecture en trois couches de l'application E-Store}
+\label{fig:archi-3layers}
+\end{figure}
+
+\subsection{Couche présentation (frontend)}
+Cette couche est en charge de l'interaction avec l'utilisateur final. Elle
+n'a aucune connaissance du modèle de persistance et communique avec le
+backend exclusivement via une \textbf{API REST/JSON}.
+
+\subsection{Couche logique métier (backend)}
+C'est le c\oe ur applicatif. Elle reçoit les requêtes HTTP, valide les
+entrées, applique les règles de gestion (vérification de stock,
+calcul de totaux, génération de jetons), orchestre les transactions et
+renvoie des DTOs sérialisés en JSON.
+
+\subsection{Couche d'accès aux données}
+Cette couche, masquée derrière les abstractions Spring Data, gère la
+persistance effective. Deux SGBD coexistent :
+\begin{itemize}
+  \item \textbf{MySQL 8} (ou H2 en mode dev) pour les données strictement
+    relationnelles : utilisateurs, produits, panier, commandes.
+  \item \textbf{MongoDB 7} pour les avis, données semi-structurées en
+    forte croissance.
+\end{itemize}
+
+\section{Découpage en domaines fonctionnels}
+
+Chaque couche est elle-même découpée en \textbf{cinq domaines fonctionnels}
+cohésifs, suivant les principes du \textit{Domain-Driven Design}
+(figure~\ref{fig:domains}). Un sixième domaine, \texttt{review}, gère la
+particularité MongoDB.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=0.4cm and 0.6cm, every node/.style={font=\small}]
+  \tikzstyle{domain} = [rectangle, rounded corners=4pt, draw=primaryblue,
+                        fill=lightgray, text width=4cm, minimum height=2.2cm,
+                        align=center, inner sep=4pt]
+  \tikzstyle{title} = [font=\bfseries\small, color=primaryblue]
+
+  \node[domain] (customer) {%
+    \title{customer}\\\smallskip
+    User, Profile,\\Auth, JWT};
+  \node[domain, right=of customer] (catalog) {%
+    \title{catalog}\\\smallskip
+    Category,\\Product, recherche};
+  \node[domain, right=of catalog] (inventory) {%
+    \title{inventory}\\\smallskip
+    Stock par\\produit};
+
+  \node[domain, below=of customer] (shopping) {%
+    \title{shopping}\\\smallskip
+    Cart,\\CartItem};
+  \node[domain, below=of catalog] (billing) {%
+    \title{billing}\\\smallskip
+    Order, OrderItem\\@Transactional};
+  \node[domain, below=of inventory] (review) {%
+    \title{review}\\\smallskip
+    Avis (MongoDB)};
+\end{tikzpicture}
+\caption{Les six domaines fonctionnels de l'application}
+\label{fig:domains}
+\end{figure}
+
+Cette double organisation \textit{couches × domaines} produit la matrice
+suivante (table~\ref{tab:matrix}) qui donne une vue exhaustive du projet.
+
+\begin{table}[htbp]
+\centering
+\caption{Matrice architecturale : 3 couches × 6 domaines}
+\label{tab:matrix}
+\small
+\begin{tabularx}{\textwidth}{lXXX}
+\toprule
+\textbf{Domaine} & \textbf{Présentation} & \textbf{Logique métier} & \textbf{Données}\\
+\midrule
+customer  & \texttt{login.component.ts}  & \texttt{AuthService}, JwtFilter   & \texttt{users}, \texttt{profiles} (JPA)\\
+catalog   & \texttt{product-list}        & \texttt{ProductService}, recherche & \texttt{products}, \texttt{categories}\\
+inventory & Indicateur stock UI         & \texttt{InventoryService}         & \texttt{inventories}\\
+shopping  & \texttt{cart.component}      & \texttt{CartService}              & \texttt{carts}, \texttt{cart\_items}\\
+billing   & \texttt{orders.component}    & \texttt{OrderService} \texttt{@Transactional} & \texttt{orders}, \texttt{order\_items}\\
+review    & \texttt{review-form}         & \texttt{ReviewService}            & MongoDB \texttt{reviews}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Modèle conceptuel des données relationnel}
+
+Le modèle relationnel comporte \textbf{neuf entités} reliées par des
+associations \textit{one-to-one}, \textit{one-to-many} et
+\textit{many-to-one}. La figure~\ref{fig:erd} en présente la version
+simplifiée.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=0.4cm and 0.5cm, every node/.style={font=\footnotesize}]
+  \tikzstyle{entity} = [rectangle split, rectangle split parts=2, draw=primaryblue,
+                        fill=lightgray, rounded corners=2pt, inner sep=3pt,
+                        rectangle split part fill={primaryblue!20, lightgray}]
+  \tikzstyle{rel} = [-{Stealth}, thick, color=darknavy]
+
+  \node[entity] (user) {\textbf{User} \nodepart{second}
+    id, firstName, lastName,\\email, password, role};
+  \node[entity, below right=of user] (profile) {\textbf{Profile}\nodepart{second}
+    id, phone, address,\\city, country};
+  \node[entity, above right=of user] (cart) {\textbf{Cart}\nodepart{second}
+    id, createdAt, updatedAt};
+  \node[entity, right=4cm of cart] (cartitem) {\textbf{CartItem}\nodepart{second}
+    id, quantity, unitPrice};
+
+  \node[entity, below=2cm of cartitem] (product) {\textbf{Product}\nodepart{second}
+    id, name, description,\\price, imageUrl};
+  \node[entity, below right=of product] (inventory) {\textbf{Inventory}\nodepart{second}
+    id, quantity};
+  \node[entity, above right=of product] (category) {\textbf{Category}\nodepart{second}
+    id, name, description};
+
+  \node[entity, below=of user] (order) {\textbf{Order}\nodepart{second}
+    id, orderDate, totalAmount, status};
+  \node[entity, right=of order] (orderitem) {\textbf{OrderItem}\nodepart{second}
+    id, quantity, unitPrice};
+
+  \draw[rel] (user) -- node[above, sloped, font=\tiny] {1..1} (profile);
+  \draw[rel] (user) -- node[above, sloped, font=\tiny] {1..1} (cart);
+  \draw[rel] (user) -- node[above, sloped, font=\tiny] {1..n} (order);
+  \draw[rel] (cart) -- node[above, font=\tiny] {1..n} (cartitem);
+  \draw[rel] (cartitem) -- node[above, sloped, font=\tiny] {n..1} (product);
+  \draw[rel] (product) -- node[above, font=\tiny] {1..1} (inventory);
+  \draw[rel] (product) -- node[above, sloped, font=\tiny] {n..1} (category);
+  \draw[rel] (order) -- node[above, font=\tiny] {1..n} (orderitem);
+  \draw[rel] (orderitem) -- node[above, sloped, font=\tiny] {n..1} (product);
+\end{tikzpicture}
+\caption{Modèle Conceptuel de Données simplifié (relationnel)}
+\label{fig:erd}
+\end{figure}
+
+\section{Modèle documentaire MongoDB}
+
+La collection \texttt{reviews} stocke les avis utilisateurs sous forme de
+documents JSON. La figure~\ref{fig:reviewdoc} montre la structure type.
+
+\begin{figure}[htbp]
+\centering
+\begin{tcolorbox}[colback=codebg, colframe=primaryblue!50, sharp corners,
+                  width=0.8\textwidth, halign=left]
+\begin{verbatim}
+{
+  "_id":         ObjectId("..."),
+  "productId":   12,
+  "userId":      5,
+  "authorName":  "Akram Belmoussa",
+  "rating":      5,
+  "comment":     "Excellent produit !",
+  "createdAt":   ISODate("2025-04-22T14:30:00Z")
+}
+\end{verbatim}
+\end{tcolorbox}
+\caption{Structure d'un document de la collection \texttt{reviews}}
+\label{fig:reviewdoc}
+\end{figure}
+
+Deux index secondaires sont créés via les annotations
+\texttt{@Indexed} sur les champs \texttt{productId} et \texttt{userId},
+afin d'accélérer les requêtes \texttt{findByProductId} et
+\texttt{findByUserId}.
+
+\section{Architecture API REST}
+
+Toute communication frontend/backend transite par une API REST décrite
+dans la table~\ref{tab:endpoints}. L'API respecte les standards :
+
+\begin{itemize}
+  \item Méthodes HTTP appropriées (GET / POST / PUT / DELETE).
+  \item Codes de retour normalisés : 200, 201, 204, 400, 401, 403, 404, 409.
+  \item Corps JSON encadré par une enveloppe \texttt{ApiResponse}
+    standardisée.
+  \item Versioning implicite par le préfixe \texttt{/api/}.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Endpoints REST principaux}
+\label{tab:endpoints}
+\small
+\begin{tabularx}{\textwidth}{p{1.2cm}p{4cm}Xc}
+\toprule
+\textbf{Verbe} & \textbf{URL} & \textbf{Description} & \textbf{Auth.}\\
+\midrule
+POST   & /api/auth/register     & Inscription                & Public\\
+POST   & /api/auth/login        & Connexion (renvoie JWT)    & Public\\
+GET    & /api/users/me          & Profil utilisateur courant & USER\\
+PUT    & /api/users/me          & Mise à jour du profil      & USER\\
+GET    & /api/categories        & Liste des catégories       & Public\\
+POST   & /api/categories        & Création (ADMIN)           & ADMIN\\
+GET    & /api/products          & Catalogue + filtres        & Public\\
+GET    & /api/products/\{id\}   & Fiche produit              & Public\\
+POST   & /api/products          & Création                   & ADMIN\\
+GET    & /api/inventory/\{id\}  & Lecture stock              & Public\\
+PUT    & /api/inventory/\{id\}  & Modification stock         & ADMIN\\
+GET    & /api/cart              & Panier courant             & USER\\
+POST   & /api/cart/add          & Ajout au panier            & USER\\
+DELETE & /api/cart/clear        & Vidage panier              & USER\\
+POST   & /api/orders            & Validation commande        & USER\\
+GET    & /api/orders            & Historique commandes       & USER\\
+POST   & /api/reviews           & Dépôt d'avis               & USER\\
+GET    & /api/reviews/product/\{id\} & Avis d'un produit     & Public\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+%  CHAPITRE 3 : CHOIX TECHNIQUES ET JUSTIFICATIONS
+% =====================================================================
+\chapter{Choix techniques et justifications}
+
+\section{Backend : Java et Spring Boot}
+
+\subsection{Pourquoi Java ?}
+Java demeure, en 2025, l'un des langages les plus largement déployés en
+entreprise — notamment dans le secteur bancaire, les télécommunications et
+le e-commerce de grande échelle. Ses atouts pédagogiques sont multiples :
+typage fort, programmation orientée objet stricte, écosystème mature,
+machine virtuelle performante. La version \textbf{Java 17 LTS} (Long-Term
+Support) a été retenue pour sa stabilité et son adoption massive.
+
+\subsection{Pourquoi Spring Boot ?}
+Spring Boot est le framework Java de référence pour la construction
+d'applications backend modernes. Il automatise la configuration et fournit
+une myriade de \textit{starters} prêts à l'emploi. Ses points forts sont :
+
+\begin{itemize}
+  \item \textbf{Auto-configuration} : par convention plutôt que par
+    configuration explicite.
+  \item \textbf{Embedded Tomcat} : déploiement en JAR auto-exécutable.
+  \item \textbf{Spring Data} : abstraction puissante des SGBD.
+  \item \textbf{Spring Security 6} : sécurisation standardisée.
+  \item \textbf{Actuator} : observabilité prête à l'emploi.
+\end{itemize}
+
+La \textbf{version 3.3} a été choisie car compatible Jakarta EE 10 et
+Java 17+, et stable depuis fin 2024.
+
+\section{Persistance hybride : MySQL + MongoDB}
+
+\subsection{Justification du choix hybride}
+Le choix d'un \textbf{double système de persistance} n'est pas un caprice :
+il répond à une réalité du terrain. Toutes les données ne sont pas égales :
+
+\begin{itemize}
+  \item Les \textbf{transactions financières} (commandes, panier, stock)
+    exigent les propriétés ACID : atomicité, cohérence, isolation,
+    durabilité. Le SQL relationnel y excelle.
+  \item Les \textbf{avis utilisateurs} ne nécessitent ni jointures
+    complexes, ni transactions ; ils croissent rapidement et sont
+    consultés massivement en lecture. Le NoSQL documentaire les sert plus
+    efficacement.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Comparaison MySQL vs MongoDB dans le contexte E-Store}
+\label{tab:dbcompare}
+\small
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Critère} & \textbf{MySQL 8 (relationnel)} & \textbf{MongoDB 7 (documentaire)}\\
+\midrule
+Paradigme         & SQL, tables normalisées       & BSON, documents JSON\\
+Schéma            & Strict, prédéfini             & Flexible\\
+Transactions      & ACID natives                  & Limitées (multi-document v4+)\\
+Joins             & Performants                   & Rares (\$lookup)\\
+Lectures massives & Bonnes (index)                & Excellentes (réplicas)\\
+Cas d'usage E-Store & Users, Products, Orders     & Reviews\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Bascule H2 / MySQL via les profils}
+Le projet exploite la fonctionnalité Spring de \textbf{profils}
+(\texttt{application-dev.properties}, \texttt{application-prod.properties})
+pour basculer transparemment entre une base H2 in-memory (développement,
+démonstration sans installation) et une base MySQL persistante
+(production, soutenance avec données pérennes).
+
+\begin{lstlisting}[style=propertiesstyle, caption=Extrait de application-dev.properties]
+# Profil dev : H2 in-memory
+spring.datasource.url=jdbc:h2:mem:estore;MODE=MySQL
+spring.datasource.driver-class-name=org.h2.Driver
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled=true
+\end{lstlisting}
+
+\section{Frontend : Angular 17 standalone}
+
+\subsection{Pourquoi Angular ?}
+Trois frameworks dominent le développement web SPA en 2025 :
+\textbf{Angular}, \textbf{React} et \textbf{Vue}. Angular se distingue par
+son approche \textit{tout-en-un} (router, formulaires, HTTP, i18n inclus) et
+son langage TypeScript natif, qui apporte la rigueur du typage statique au
+JavaScript. Pour un projet pédagogique de fin de module, Angular offre
+l'environnement le plus structurant.
+
+\subsection{Le mode standalone d'Angular 17}
+Depuis la version 14, et de manière généralisée depuis la version 17,
+Angular permet de s'affranchir des \texttt{NgModule} historiques au profit
+de \textbf{composants standalone}. Avantages :
+
+\begin{itemize}
+  \item Code plus concis (suppression du boilerplate des modules).
+  \item Lazy loading natif par route.
+  \item Imports explicites par composant : meilleure traçabilité.
+  \item Bundle initial plus léger.
+\end{itemize}
+
+\subsection{Signals : la nouvelle réactivité}
+Les \textbf{signals} sont la grande nouveauté d'Angular 17. Ils
+remplacent avantageusement, dans les cas simples, les \texttt{Observable}
+RxJS pour la gestion d'état. Dans E-Store, ils servent par exemple à
+afficher dynamiquement le badge du panier dans la barre de navigation :
+
+\begin{lstlisting}[style=tsstyle, caption=Utilisation de signals dans CartService]
+@Injectable({ providedIn: 'root' })
+export class CartService {
+  readonly cart = signal<Cart | null>(null);
+  readonly itemCount = signal<number>(0);
+
+  add(productId: number, qty: number) {
+    return this.http.post(...).pipe(
+      tap(r => this.update(r.data))
+    );
+  }
+}
+\end{lstlisting}
+
+% =====================================================================
+%  CHAPITRE 4 : RÉALISATION BACKEND
+% =====================================================================
+\chapter{Réalisation du backend}
+
+\section{Structure générale du projet}
+
+L'arborescence \texttt{estore-backend/src/main/java/com/estore/} reflète
+fidèlement le découpage en domaines :
+
+\begin{lstlisting}[style=shellstyle]
+com.estore/
+  EstoreApplication.java        <- Point d'entree
+  customer/    {entity, dto, repository, service, controller, security}
+  catalog/     {entity, dto, repository, service, controller}
+  inventory/   {entity, dto, repository, service, controller}
+  shopping/    {entity, dto, repository, service, controller}
+  billing/     {entity, dto, repository, service, controller}
+  review/      {document, dto, repository, service, controller}
+  shared/      ApiResponse.java
+  config/      CorsConfig, SecurityConfig, DataSeeder
+  exception/   GlobalExceptionHandler + 3 exceptions metier
+\end{lstlisting}
+
+Chaque domaine est \textbf{autonome} : il ne peut dépendre que des couches
+inférieures de son propre domaine, ou des composants partagés
+(\texttt{shared}, \texttt{exception}). Les domaines communiquent
+exclusivement via leurs services publics.
+
+\section{Domaine \texttt{customer}}
+
+Ce domaine pivote autour de l'entité \texttt{User}, à laquelle est associé
+un \texttt{Profile} en relation \texttt{@OneToOne}.
+
+\subsection{Entité User}
+
+\begin{lstlisting}[style=javastyle, caption=Entite User (extrait)]
+@Entity
+@Table(name = "users")
+public class User {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @JsonIgnore
+    @Column(nullable = false)
+    private String password;          // hash BCrypt, jamais en clair
+
+    @Enumerated(EnumType.STRING)
+    private Role role;                 // USER ou ADMIN
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
+              orphanRemoval = true, fetch = FetchType.LAZY)
+    private Profile profile;
+}
+\end{lstlisting}
+
+L'annotation \texttt{@JsonIgnore} sur \texttt{password} empêche toute
+sérialisation accidentelle. La cascade \texttt{ALL} sur \texttt{profile}
+garantit l'atomicité création/suppression.
+
+\subsection{AuthService}
+
+L'\texttt{AuthService} centralise la logique d'inscription et de connexion.
+La connexion délègue à Spring Security via l'\texttt{AuthenticationManager},
+puis génère un JWT.
+
+\begin{lstlisting}[style=javastyle, caption=Methode register de AuthService]
+@Transactional
+public AuthResponseDto register(RegisterDto dto) {
+    if (userRepository.existsByEmail(dto.getEmail()))
+        throw new BusinessException("Cet email est deja utilise");
+
+    User user = User.builder()
+        .firstName(dto.getFirstName()).lastName(dto.getLastName())
+        .email(dto.getEmail())
+        .password(passwordEncoder.encode(dto.getPassword()))  // BCrypt
+        .role(Role.USER).build();
+
+    user.setProfile(Profile.builder().user(user).build());
+    User saved = userRepository.save(user);
+
+    String token = jwtService.generateToken(saved);
+    return AuthResponseDto.builder()
+        .token(token).user(UserDto.from(saved)).build();
+}
+\end{lstlisting}
+
+\section{Domaine \texttt{catalog}}
+
+Le catalogue regroupe \texttt{Category} et \texttt{Product}. Le repository
+\texttt{ProductRepository} expose une méthode personnalisée combinant
+recherche textuelle et filtre par catégorie :
+
+\begin{lstlisting}[style=javastyle, caption=Recherche multi-critere de produits]
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    @Query("""
+        SELECT p FROM Product p
+        WHERE (:categoryId IS NULL OR p.category.id = :categoryId)
+          AND (:q IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%',:q,'%'))
+                          OR LOWER(p.description) LIKE LOWER(CONCAT('%',:q,'%')))
+    """)
+    Page<Product> search(@Param("categoryId") Long categoryId,
+                         @Param("q") String q, Pageable pageable);
+}
+\end{lstlisting}
+
+L'utilisation de JPQL plutôt que de SQL natif garantit la portabilité
+H2/MySQL, et la pagination via \texttt{Pageable} évite le retour massif
+d'enregistrements.
+
+\section{Domaine \texttt{shopping} et \texttt{billing}}
+
+\subsection{Le panier (shopping)}
+L'entité \texttt{Cart} maintient une relation \texttt{@OneToMany} avec
+\texttt{CartItem}. À l'ajout d'un produit déjà présent, la quantité est
+incrémentée plutôt que dupliquée.
+
+\subsection{Le checkout transactionnel (billing)}
+La validation de commande constitue \textbf{l'opération la plus critique}
+de l'application. Elle touche trois agrégats (Cart, Order, Inventory) et
+doit être strictement atomique.
+
+\begin{lstlisting}[style=javastyle, caption=OrderService.checkout() — l'operation transactionnelle]
+@Transactional
+public OrderDto checkout() {
+    User user = securityUtils.currentUser();
+    Cart cart = cartService.getOrCreateCart(user);
+    if (cart.getItems().isEmpty())
+        throw new BusinessException("Votre panier est vide");
+
+    // 1) Verifier le stock pour TOUS les items AVANT toute modification
+    for (CartItem ci : cart.getItems())
+        inventoryService.checkAvailability(
+            ci.getProduct().getId(), ci.getQuantity());
+
+    // 2) Creer la commande + decrementer le stock
+    Order order = Order.builder().user(user)
+        .status(OrderStatus.PENDING).build();
+    BigDecimal total = BigDecimal.ZERO;
+    for (CartItem ci : cart.getItems()) {
+        order.getItems().add(OrderItem.builder()
+            .order(order).product(ci.getProduct())
+            .quantity(ci.getQuantity()).unitPrice(ci.getUnitPrice())
+            .build());
+        total = total.add(ci.getUnitPrice()
+                            .multiply(BigDecimal.valueOf(ci.getQuantity())));
+        inventoryService.decrement(
+            ci.getProduct().getId(), ci.getQuantity());
+    }
+    order.setTotalAmount(total);
+    order.setStatus(OrderStatus.CONFIRMED);
+
+    // 3) Sauvegarder + vider le panier
+    Order saved = orderRepository.save(order);
+    cartService.clearCart(cart);
+    return OrderDto.from(saved);
+}
+\end{lstlisting}
+
+\begin{infobox}
+L'annotation \texttt{@Transactional} de Spring garantit qu'en cas
+d'exception levée à n'importe quelle étape (par exemple une rupture de
+stock détectée tardivement, une coupure de la base de données, etc.), \emph{toutes} les modifications faites depuis l'entrée dans la méthode
+sont automatiquement annulées (\textit{rollback}). C'est l'\textbf{atomicité
+ACID} en action.
+\end{infobox}
+
+\section{Domaine \texttt{review} (MongoDB)}
+
+Le document \texttt{Review} est mappé sur la collection MongoDB éponyme :
+
+\begin{lstlisting}[style=javastyle, caption=Document MongoDB Review]
+@Document(collection = "reviews")
+public class Review {
+    @Id private String id;
+    @Indexed private Long productId;
+    @Indexed private Long userId;
+    private String authorName;
+    private int rating;
+    private String comment;
+    private Instant createdAt;
+}
+\end{lstlisting}
+
+Le repository tire profit de la \textit{convention over configuration} de
+Spring Data : la simple déclaration d'une méthode au nom évocateur produit
+la requête correspondante.
+
+\begin{lstlisting}[style=javastyle]
+public interface ReviewRepository extends MongoRepository<Review, String> {
+    List<Review> findByProductIdOrderByCreatedAtDesc(Long productId);
+    List<Review> findByUserIdOrderByCreatedAtDesc(Long userId);
+}
+\end{lstlisting}
+
+\section{Gestion globale des erreurs}
+
+Plutôt que de laisser remonter des exceptions Java brutes vers le client,
+l'application centralise leur traitement via un
+\texttt{@RestControllerAdvice}. Chaque exception métier est convertie en
+réponse JSON propre avec le code HTTP approprié.
+
+\begin{lstlisting}[style=javastyle, caption=Extrait de GlobalExceptionHandler]
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNotFound(
+            ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiResponse<Void>> handleBusiness(
+            BusinessException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(ApiResponse.error(ex.getMessage()));
+    }
+    // ... + ValidationException, BadCredentialsException, AccessDeniedException
+}
+\end{lstlisting}
+
+% =====================================================================
+%  CHAPITRE 5 : SÉCURITÉ
+% =====================================================================
+\chapter{Sécurité de l'application}
+
+La sécurité de toute application e-commerce est une exigence absolue.
+E-Store met en \oe uvre une chaîne complète depuis le hachage des mots de
+passe jusqu'à l'autorisation fine par rôle.
+
+\section{Hachage BCrypt des mots de passe}
+
+Aucun mot de passe utilisateur n'est jamais stocké en clair. Tous transitent
+par l'algorithme \textbf{BCrypt}, un \textit{one-way hash} avec sel
+aléatoire et facteur de coût ajustable. Le facteur 10 (par défaut Spring)
+est utilisé, soit $2^{10} = 1024$ rounds.
+
+\begin{lstlisting}[style=javastyle]
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+\end{lstlisting}
+
+\section{Authentification stateless par JWT}
+
+L'authentification suit un modèle \textit{stateless} : aucun état n'est
+conservé côté serveur entre deux requêtes. Le client porte lui-même la
+preuve de son identité, sous la forme d'un \textbf{JSON Web Token} signé.
+
+\subsection{Structure d'un JWT}
+Un JWT est composé de trois parties séparées par un point :
+\texttt{header.payload.signature}. Le payload de E-Store contient les
+\textit{claims} suivants :
+
+\begin{itemize}
+  \item \texttt{sub} : email de l'utilisateur (subject)
+  \item \texttt{uid} : identifiant numérique
+  \item \texttt{role} : USER ou ADMIN
+  \item \texttt{name} : nom complet (pour affichage UI)
+  \item \texttt{iat} et \texttt{exp} : timestamps de création et d'expiration
+\end{itemize}
+
+\subsection{Cycle de vie complet}
+
+La figure~\ref{fig:jwtflow} décrit le cycle de vie complet d'un JWT, de
+sa génération à sa validation par le filtre Spring Security.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=0.6cm and 1.5cm, every node/.style={font=\footnotesize}]
+  \tikzstyle{actor} = [rectangle, rounded corners=3pt, draw=primaryblue,
+                       fill=primaryblue!15, text width=2.7cm, minimum height=0.8cm,
+                       align=center]
+  \tikzstyle{step} = [rectangle, rounded corners=3pt, draw=darknavy,
+                      fill=lightgray, text width=8cm, minimum height=0.8cm,
+                      align=left, inner sep=4pt]
+  \tikzstyle{arrow} = [-{Stealth}, thick]
+
+  \node[actor] (client) {Client (Angular)};
+  \node[actor, right=4cm of client] (server) {Serveur (Spring)};
+
+  \node[step, below=of client, xshift=2cm] (s1)
+    {\textbf{1.} Login : POST /api/auth/login (email, password)};
+  \node[step, below=of s1] (s2)
+    {\textbf{2.} AuthService valide via passwordEncoder.matches()};
+  \node[step, below=of s2] (s3)
+    {\textbf{3.} JwtService.generateToken() — HMAC-SHA256, exp 24h};
+  \node[step, below=of s3] (s4)
+    {\textbf{4.} Client persiste le token dans localStorage};
+  \node[step, below=of s4] (s5)
+    {\textbf{5.} Toute requete : header Authorization: Bearer <token>};
+  \node[step, below=of s5] (s6)
+    {\textbf{6.} JwtAuthenticationFilter valide la signature et l'exp.};
+  \node[step, below=of s6] (s7)
+    {\textbf{7.} Si OK : SecurityContext.setAuthentication(...)};
+\end{tikzpicture}
+\caption{Cycle de vie d'un JWT dans E-Store}
+\label{fig:jwtflow}
+\end{figure}
+
+\subsection{Génération du token}
+
+\begin{lstlisting}[style=javastyle, caption=JwtService.generateToken]
+public String generateToken(User user) {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("uid",  user.getId());
+    claims.put("role", user.getRole().name());
+    claims.put("name", user.getFirstName() + " " + user.getLastName());
+
+    Date now = new Date();
+    Date exp = new Date(now.getTime() + expirationMs);  // 24h
+
+    return Jwts.builder()
+        .claims(claims)
+        .subject(user.getEmail())
+        .issuedAt(now).expiration(exp)
+        .signWith(key)                                  // HMAC-SHA256
+        .compact();
+}
+\end{lstlisting}
+
+\subsection{Validation côté serveur}
+
+À chaque requête entrante, le \texttt{JwtAuthenticationFilter}
+(extension de \texttt{OncePerRequestFilter}) extrait le token, vérifie sa
+signature et son expiration, puis place l'utilisateur dans le
+\texttt{SecurityContextHolder}.
+
+\section{Autorisation par rôle}
+
+Les opérations sensibles (création/modification/suppression de catégories
+et de produits, mise à jour du stock) sont protégées par
+\texttt{@PreAuthorize}.
+
+\begin{lstlisting}[style=javastyle]
+@PostMapping
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<ApiResponse<ProductDto>> create(
+        @Valid @RequestBody CreateProductDto dto) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(ApiResponse.ok("Produit cree", productService.create(dto)));
+}
+\end{lstlisting}
+
+Tout appel à cet endpoint par un utilisateur non-ADMIN se solde par un
+HTTP 403 Forbidden, intercepté par le \texttt{GlobalExceptionHandler}.
+
+\section{Configuration CORS}
+
+En développement, le frontend tourne sur le port 4200 et le backend sur le
+port 8080. Cette différence d'origine déclencherait une erreur CORS du
+navigateur sans configuration appropriée.
+
+\begin{lstlisting}[style=javastyle, caption=CorsConfig]
+@Override
+public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/api/**")
+        .allowedOrigins("http://localhost:4200")
+        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
+        .allowedHeaders("*").allowCredentials(true);
+}
+\end{lstlisting}
+
+% =====================================================================
+%  CHAPITRE 6 : RÉALISATION FRONTEND
+% =====================================================================
+\chapter{Réalisation du frontend}
+
+\section{Structure de l'application Angular}
+
+Le projet Angular suit l'organisation \textbf{core / shared / features},
+classique des applications Angular modernes :
+
+\begin{lstlisting}[style=shellstyle]
+src/app/
+  app.component.ts          <- Composant racine
+  app.config.ts             <- Configuration globale (providers)
+  app.routes.ts             <- Routes
+  core/
+    services/               <- AuthService, CartService, ...
+    guards/                 <- AuthGuard
+    interceptors/           <- AuthInterceptor, ErrorInterceptor
+    models/                 <- Interfaces TypeScript
+  shared/
+    components/             <- Header, Footer, Loader, Toast
+  features/
+    auth/                   <- Login, Register
+    catalog/                <- ProductList, ProductDetail
+    cart/                   <- Cart
+    orders/                 <- Orders
+    profile/                <- Profile
+    reviews/                <- ReviewForm
+\end{lstlisting}
+
+\section{Bootstrap de l'application}
+
+Le fichier \texttt{main.ts} amorce l'application sans \texttt{NgModule},
+en passant directement par \texttt{bootstrapApplication}.
+
+\begin{lstlisting}[style=tsstyle, caption=main.ts]
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch(err => console.error(err));
+\end{lstlisting}
+
+La configuration des providers globaux (router, HTTP client, intercepteurs)
+est centralisée dans \texttt{app.config.ts} :
+
+\begin{lstlisting}[style=tsstyle, caption=app.config.ts]
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes, withComponentInputBinding()),
+    provideHttpClient(withInterceptors([
+      authInterceptor, errorInterceptor
+    ]))
+  ]
+};
+\end{lstlisting}
+
+\section{Routing et lazy loading}
+
+Toutes les routes utilisent \texttt{loadComponent} pour un lazy loading
+natif, ce qui produit des bundles séparés par fonctionnalité.
+
+\begin{lstlisting}[style=tsstyle, caption=app.routes.ts]
+export const routes: Routes = [
+  { path: '', loadComponent: () =>
+      import('./features/catalog/product-list.component')
+        .then(m => m.ProductListComponent) },
+  { path: 'login', loadComponent: () =>
+      import('./features/auth/login.component')
+        .then(m => m.LoginComponent) },
+  { path: 'cart', loadComponent: () =>
+      import('./features/cart/cart.component')
+        .then(m => m.CartComponent),
+    canActivate: [authGuard] },
+  // ...
+];
+\end{lstlisting}
+
+Mesure : le bundle initial pèse \textbf{13.84 ko}, et chaque feature ajoute
+en moyenne \textbf{8 ko} chargés à la demande.
+
+\section{AuthInterceptor et ErrorInterceptor}
+
+L'\texttt{AuthInterceptor} attache silencieusement le JWT à chaque requête
+HTTP sortante :
+
+\begin{lstlisting}[style=tsstyle]
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = inject(AuthService).token;
+  if (!token) return next(req);
+  return next(req.clone({
+    setHeaders: { Authorization: `Bearer ${token}` }
+  }));
+};
+\end{lstlisting}
+
+L'\texttt{ErrorInterceptor} centralise la gestion d'erreurs :
+401 entraîne la déconnexion automatique, 4xx/5xx affichent un toast.
+
+\begin{lstlisting}[style=tsstyle]
+export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const toast = inject(ToastService);
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  return next(req).pipe(
+    catchError((err: HttpErrorResponse) => {
+      if (err.status === 401) {
+        auth.logout();
+        router.navigate(['/login']);
+        toast.error('Session expiree');
+      } else if (err.status !== 0) {
+        toast.error(err.error?.message || `Erreur ${err.status}`);
+      }
+      return throwError(() => err);
+    })
+  );
+};
+\end{lstlisting}
+
+\section{AuthGuard}
+
+\begin{lstlisting}[style=tsstyle]
+export const authGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  if (auth.isAuthenticated) return true;
+  router.navigate(['/login']);
+  return false;
+};
+\end{lstlisting}
+
+Trois routes sont protégées par cette garde : \texttt{/cart},
+\texttt{/orders} et \texttt{/profile}. Le panier d'un visiteur non
+connecté n'est donc jamais persisté côté serveur.
+
+\section{Aperçu de l'interface}
+
+L'interface adopte les codes du e-commerce moderne : barre de navigation
+fixe en tête, grille de cartes produits responsive (1 / 2 / 4 colonnes
+selon la largeur d'écran), badges colorés indiquant la disponibilité
+stock. Bootstrap 5 fournit l'ossature CSS et les composants standards
+(modales, alertes, formulaires).
+
+% =====================================================================
+%  CHAPITRE 7 : TESTS ET VALIDATION
+% =====================================================================
+\chapter{Tests et validation}
+
+\section{Stratégie de tests}
+
+Suivant la \textbf{pyramide de tests} de Mike Cohn, nous avons concentré
+l'effort sur la base de la pyramide : les tests unitaires des services
+métier. Ces tests sont rapides, déterministes et faciles à maintenir.
+
+\section{Outils utilisés}
+
+\begin{itemize}
+  \item \textbf{JUnit 5} (Jupiter) : framework de test
+  \item \textbf{Mockito 5} : isolation des dépendances
+  \item \textbf{AssertJ} : assertions fluentes (\texttt{assertThat...})
+  \item \textbf{Spring Boot Test} : pour les tests d'intégration éventuels
+\end{itemize}
+
+\section{Suites de tests implémentées}
+
+\begin{table}[htbp]
+\centering
+\caption{Tests unitaires E-Store}
+\label{tab:tests}
+\small
+\begin{tabularx}{\textwidth}{lccX}
+\toprule
+\textbf{Suite} & \textbf{Tests} & \textbf{Statut} & \textbf{Couverture}\\
+\midrule
+\texttt{ProductServiceTest} & 4 & PASS & findById (présent / absent), recherche (avec / sans mot-clé)\\
+\texttt{CartServiceTest}    & 2 & PASS & Ajout avec stock suffisant et insuffisant\\
+\texttt{OrderServiceTest}   & 3 & PASS & Panier vide, validation complète, historique\\
+\midrule
+\textbf{Total}              & \textbf{9} & \textbf{0 failure} & BUILD SUCCESS\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Exemple de test}
+
+\begin{lstlisting}[style=javastyle, caption=Test du checkout transactionnel]
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class OrderServiceTest {
+
+    @Mock private OrderRepository orderRepository;
+    @Mock private CartService cartService;
+    @Mock private InventoryService inventoryService;
+    @InjectMocks private OrderService orderService;
+
+    @Test
+    void checkout_panierValide_creeCommandeEtViderPanier() {
+        // Given
+        cart.getItems().add(item);
+        when(orderRepository.save(any(Order.class)))
+            .thenAnswer(inv -> { Order o = inv.getArgument(0);
+                                  o.setId(500L); return o; });
+        // When
+        OrderDto dto = orderService.checkout();
+        // Then
+        assertThat(dto.getId()).isEqualTo(500L);
+        assertThat(dto.getStatus()).isEqualTo(OrderStatus.CONFIRMED);
+        assertThat(dto.getTotalAmount())
+            .isEqualByComparingTo(new BigDecimal("25000.00"));
+        verify(inventoryService).decrement(10L, 2);
+        verify(cartService).clearCart(cart);
+    }
+
+    @Test
+    void checkout_panierVide_lanceException() {
+        assertThatThrownBy(() -> orderService.checkout())
+            .isInstanceOf(BusinessException.class)
+            .hasMessageContaining("vide");
+    }
+}
+\end{lstlisting}
+
+\section{Résultats d'exécution}
+
+\begin{lstlisting}[style=shellstyle]
+$ ./mvnw test
+[INFO] Tests run: 3, Failures: 0, Errors: 0 -- OrderServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0 -- ProductServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0 -- CartServiceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+\end{lstlisting}
+
+% =====================================================================
+%  CHAPITRE 8 : DÉPLOIEMENT ET DEVOPS
+% =====================================================================
+\chapter{Déploiement et DevOps}
+
+\section{Profils Spring}
+
+L'application fournit deux profils d'exécution :
+
+\begin{itemize}
+  \item \textbf{dev} (par défaut) : H2 in-memory, MongoDB optionnel.
+    Démarrage instantané sans installation préalable.
+  \item \textbf{prod} : MySQL 8 + MongoDB 7, accessibles via Docker Compose.
+\end{itemize}
+
+\section{Conteneurisation Docker}
+
+Le fichier \texttt{docker-compose.yml} orchestre quatre services :
+
+\begin{lstlisting}[style=propertiesstyle, caption=docker-compose.yml (extrait)]
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: estore
+    ports: ["3306:3306"]
+    volumes: [mysql-data:/var/lib/mysql]
+
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: [mongo-data:/data/db]
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports: ["8081:80"]
+    depends_on: [mysql]
+
+  mongo-express:
+    image: mongo-express:latest
+    ports: ["8082:8081"]
+    depends_on: [mongo]
+\end{lstlisting}
+
+Une commande suffit alors à provisionner l'environnement complet :
+
+\begin{lstlisting}[style=shellstyle]
+$ docker compose up -d
+\end{lstlisting}
+
+\section{Démarrage en trois commandes}
+
+\begin{lstlisting}[style=shellstyle]
+# 1. Bases de donnees (optionnel : profil prod uniquement)
+docker compose up -d
+
+# 2. Backend
+cd estore-backend && ./mvnw spring-boot:run
+
+# 3. Frontend
+cd estore-frontend && npm install && npm start
+\end{lstlisting}
+
+\section{Versionnement Git et publication GitHub}
+
+L'historique du projet est versionné par Git, organisé en
+\textbf{19 commits} sémantiques (\texttt{feat}, \texttt{fix},
+\texttt{docs}, \texttt{chore}). Le projet est publié sur GitHub à l'adresse
+\url{https://github.com/akrambelmoussa-etu-byte/e-store}.
+
+% =====================================================================
+%  CHAPITRE 9 : DIFFICULTÉS RENCONTRÉES ET SOLUTIONS
+% =====================================================================
+\chapter{Difficultés rencontrées et solutions}
+
+Le développement n'a pas été un long fleuve tranquille. Plusieurs
+obstacles techniques significatifs ont été rencontrés ; les surmonter a
+été l'occasion d'approfondir notre compréhension de l'écosystème.
+
+\section{Difficulté n°1 : strictness Mockito}
+
+\subsection{Symptôme}
+Lors du premier lancement de \texttt{mvn test}, deux tests échouent avec
+le message :
+\begin{quote}
+\texttt{UnnecessaryStubbingException: Unnecessary stubbings detected.}
+\end{quote}
+
+\subsection{Cause}
+Mockito 5 applique par défaut le mode strict. Toute instruction
+\texttt{when(...).thenReturn(...)} déclarée mais non vérifiée durant
+l'exécution du test provoque une erreur. Or, nos méthodes
+\texttt{@BeforeEach} configuraient des stubs partagés entre plusieurs tests.
+
+\subsection{Solution}
+Annoter chaque classe de test avec
+\texttt{@MockitoSettings(strictness = Strictness.LENIENT)}, ce qui
+relâche la vérification tout en conservant la sécurité d'écriture.
+
+\begin{lstlisting}[style=javastyle]
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class CartServiceTest { ... }
+\end{lstlisting}
+
+\section{Difficulté n°2 : LazyInitializationException}
+
+\subsection{Symptôme}
+Lors du retour d'une entité \texttt{User} via le contrôleur, Hibernate
+levait une \texttt{LazyInitializationException} sur le \texttt{Profile}
+chargé en mode \texttt{LAZY}.
+
+\subsection{Cause}
+La sérialisation Jackson tentait de naviguer dans la relation après la
+fermeture de la session JPA.
+
+\subsection{Solution}
+Adoption systématique du pattern \textbf{DTO} : chaque endpoint renvoie
+un objet de transfert (\texttt{UserDetailsDto}), construit dans la couche
+service alors que la session est encore ouverte. Avantage collatéral :
+les DTOs masquent les champs sensibles (password) et stabilisent l'API.
+
+\section{Difficulté n°3 : installation de Docker Desktop}
+
+\subsection{Symptôme}
+Lors de l'installation de Docker Desktop sous Windows 11, l'erreur
+suivante bloque le processus :
+\begin{quote}\itshape
+For security reasons C:\textbackslash ProgramData\textbackslash DockerDesktop must be owned
+by an elevated account.
+\end{quote}
+
+\subsection{Cause}
+Un dossier résiduel d'une installation antérieure subsistait avec des
+permissions incorrectes.
+
+\subsection{Solutions implémentées}
+
+\textbf{Solution A — Brute :} suppression manuelle en mode administrateur :
+\begin{lstlisting}[style=shellstyle]
+rmdir /s /q "C:\ProgramData\DockerDesktop"
+rmdir /s /q "C:\ProgramData\Docker"
+\end{lstlisting}
+puis réinstallation.
+
+\textbf{Solution B — Élégante :} mise en place d'un \textbf{profil dev}
+basé sur H2 in-memory, qui permet de démarrer l'application sans aucune
+installation préalable. Cette dualité Docker/H2 a été pensée dès la
+conception et a fait ses preuves le jour de la démonstration.
+
+\begin{tipbox}
+Cette difficulté a été convertie en force pédagogique : nous démontrons
+au jury notre capacité à anticiper les problèmes d'environnement et à
+prévoir des chemins de repli (\textit{fallback}) — une compétence
+clairement attendue en milieu professionnel.
+\end{tipbox}
+
+\section{Difficulté n°4 : encodage des tokens JWT}
+
+\subsection{Symptôme}
+Lors de la génération du premier JWT, la bibliothèque \texttt{jjwt} levait
+une \texttt{WeakKeyException} : la clé secrète configurée comportait moins
+de 256 bits.
+
+\subsection{Solution}
+Implémenter une logique de fallback : tenter d'abord un décodage Base64
+de la clé, et en cas d'échec ou de longueur insuffisante, utiliser
+l'encodage UTF-8 brut.
+
+\begin{lstlisting}[style=javastyle]
+byte[] bytes;
+try {
+    bytes = Decoders.BASE64.decode(secret);
+    if (bytes.length < 32) throw new IllegalArgumentException();
+} catch (Exception e) {
+    bytes = secret.getBytes(StandardCharsets.UTF_8);
+}
+this.key = Keys.hmacShaKeyFor(bytes);
+\end{lstlisting}
+
+% =====================================================================
+%  CHAPITRE 10 : RÉSULTATS
+% =====================================================================
+\chapter{Résultats et démonstration}
+
+\section{Bilan fonctionnel}
+
+L'application livrée couvre intégralement le périmètre du cahier des
+charges. Le tableau~\ref{tab:bilan} en synthétise les fonctionnalités.
+
+\begin{table}[htbp]
+\centering
+\caption{Fonctionnalités livrées}
+\label{tab:bilan}
+\small
+\begin{tabularx}{\textwidth}{lXc}
+\toprule
+\textbf{Fonctionnalité} & \textbf{Description} & \textbf{Statut}\\
+\midrule
+Inscription / Connexion & Email + mot de passe, JWT 24h            & Livré \\
+Profil utilisateur      & Consultation et modification             & Livré \\
+Catalogue paginé        & Recherche, filtre par catégorie          & Livré \\
+Fiche produit           & Détail, image, stock, avis               & Livré \\
+Panier persistant       & Ajout, modification, vidage              & Livré \\
+Validation commande     & Transactionnelle ACID                    & Livré \\
+Historique commandes    & Consultation détaillée                   & Livré \\
+Avis produits           & Dépôt et consultation (MongoDB)          & Livré \\
+Administration          & CRUD catégories / produits / stock       & Livré \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Métriques de qualité}
+
+\begin{table}[htbp]
+\centering
+\caption{Métriques quantitatives du projet}
+\label{tab:metrics}
+\small
+\begin{tabularx}{\textwidth}{Xr}
+\toprule
+\textbf{Indicateur} & \textbf{Valeur}\\
+\midrule
+Lignes de code Java                              & $\sim$ 3 500 \\
+Lignes de code TypeScript                        & $\sim$ 2 000 \\
+Nombre de classes Java                           & 71 \\
+Nombre de composants Angular                     & 14 \\
+Nombre d'endpoints REST                          & 24 \\
+Tests unitaires                                  & 9 (100\% passants) \\
+Bundle JS initial                                & 13.84 ko \\
+Temps de démarrage backend (H2)                  & $\approx$ 4 s \\
+Temps de réponse API (médiane, dev)              & $\approx$ 30 ms \\
+Commits Git                                      & 19 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Captures d'écran de la démonstration}
+
+Les captures d'écran de l'application en fonctionnement sont disponibles
+dans le dossier \texttt{docs/screenshots/} du dépôt GitHub. Le scénario
+de démonstration suit huit étapes :
+
+\begin{enumerate}
+  \item Page catalogue avec 12 produits seed
+  \item Filtrage par catégorie « Sport »
+  \item Fiche détaillée d'un produit
+  \item Tentative d'ajout au panier non authentifié $\to$ redirection
+  \item Connexion avec le compte de test
+  \item Ajout de deux produits au panier
+  \item Validation de la commande, redirection vers /orders
+  \item Dépôt d'un avis 5 étoiles, persistance MongoDB
+\end{enumerate}
+
+% =====================================================================
+%  CONCLUSION GÉNÉRALE
+% =====================================================================
+\chapter*{Conclusion générale}
+\addcontentsline{toc}{chapter}{Conclusion générale}
+\markboth{CONCLUSION GÉNÉRALE}{}
+
+\section*{Bilan}
+
+Au terme de ce projet, nous avons mené à bien la conception et la
+réalisation d'une application e-commerce \textbf{intégralement
+fonctionnelle}, couvrant le parcours utilisateur du visiteur anonyme
+jusqu'à la commande validée. L'architecture en \textbf{trois couches × cinq
+domaines} a été rigoureusement respectée, fournissant une base saine pour
+toute évolution ultérieure.
+
+Sur le plan technique, les objectifs initiaux ont tous été atteints :
+\begin{itemize}
+  \item Architecture full-stack moderne avec Spring Boot 3.3 et Angular 17.
+  \item Persistance hybride MySQL + MongoDB opérationnelle.
+  \item Sécurité robuste par BCrypt + JWT + \texttt{@PreAuthorize}.
+  \item Suite de tests JUnit 5 / Mockito en BUILD SUCCESS.
+  \item Conteneurisation Docker Compose, profil de fallback H2.
+\end{itemize}
+
+Sur le plan humain, le travail en binôme nous a permis d'expérimenter
+\textit{in vivo} les pratiques du développement collaboratif :
+versionnement Git, conventions de commit, revue de code, répartition des
+tâches, communication asynchrone. Ces compétences relationnelles, souvent
+sous-estimées, sont déterminantes en milieu professionnel.
+
+\section*{Apports personnels}
+
+Au-delà de la technique, ce projet nous a confronté à la \textbf{réalité
+de l'incertitude} qui caractérise tout développement logiciel : choix
+d'architecture aux conséquences durables, débogage de problèmes inattendus
+(la mésaventure Docker en est l'archétype), arbitrages entre élégance du
+code et délais. Apprendre à composer avec cette incertitude, plutôt qu'à
+la fuir, est probablement le bénéfice le plus durable de cette expérience.
+
+\section*{Perspectives}
+
+Le projet livré n'est pas un produit fini mais un \textbf{socle évolutif}.
+Plusieurs pistes d'extension ont été identifiées :
+
+\begin{itemize}
+  \item \textbf{Paiement en ligne} : intégration de Stripe ou des
+    passerelles marocaines (CMI, Maroc Telecommerce).
+  \item \textbf{Notifications transactionnelles} : envoi automatique
+    d'emails (Spring Mail) ou de SMS (Twilio) lors de la confirmation de
+    commande.
+  \item \textbf{Recommandations} : suggestion produits basée sur
+    l'historique d'achat (collaborative filtering simple, ou Spring AI).
+  \item \textbf{Internationalisation} : passage du français à l'arabe ou
+    l'anglais via Angular i18n.
+  \item \textbf{Déploiement cloud} : conteneurisation et déploiement sur
+    Heroku, Render ou AWS Free Tier.
+  \item \textbf{Application mobile} : portage Ionic ou Flutter consommant
+    la même API.
+  \item \textbf{Observabilité} : intégration Prometheus + Grafana pour les
+    métriques applicatives.
+\end{itemize}
+
+Plus fondamentalement, l'architecture en couches et en domaines que nous
+avons mise en place rend ces évolutions \textbf{additives} : il sera
+possible de les introduire sans casser l'existant. C'est, à nos yeux, la
+preuve la plus convaincante que les choix architecturaux de départ étaient
+les bons.
+
+% =====================================================================
+%  BIBLIOGRAPHIE
+% =====================================================================
+\chapter*{Bibliographie et webographie}
+\addcontentsline{toc}{chapter}{Bibliographie et webographie}
+\markboth{BIBLIOGRAPHIE}{}
+
+\subsection*{Ouvrages}
+
+\begin{enumerate}
+  \item Craig Walls, \textit{Spring Boot in Action}, 2nd edition,
+    Manning Publications, 2024.
+  \item Robert C. Martin, \textit{Clean Code: A Handbook of Agile Software
+    Craftsmanship}, Prentice Hall, 2008.
+  \item Eric Evans, \textit{Domain-Driven Design: Tackling Complexity in
+    the Heart of Software}, Addison-Wesley, 2003.
+  \item Martin Fowler, \textit{Patterns of Enterprise Application
+    Architecture}, Addison-Wesley, 2002.
+\end{enumerate}
+
+\subsection*{Documentations officielles}
+
+\begin{enumerate}
+  \item Spring Framework Reference Documentation, \url{https://docs.spring.io/spring-framework/reference/}
+  \item Spring Boot Reference Documentation, \url{https://docs.spring.io/spring-boot/}
+  \item Spring Data JPA, \url{https://docs.spring.io/spring-data/jpa/reference/}
+  \item Spring Data MongoDB, \url{https://docs.spring.io/spring-data/mongodb/reference/}
+  \item Angular Documentation, \url{https://angular.dev/}
+  \item MongoDB Manual, \url{https://www.mongodb.com/docs/manual/}
+  \item RFC 7519 — JSON Web Token (JWT), \url{https://www.rfc-editor.org/rfc/rfc7519}
+  \item OWASP Authentication Cheat Sheet, \url{https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html}
+\end{enumerate}
+
+\subsection*{Articles et tutoriels}
+
+\begin{enumerate}
+  \item Baeldung, ``A Guide to JPA with Spring'', \url{https://www.baeldung.com/the-persistence-layer-with-spring-and-jpa}
+  \item Baeldung, ``Spring Security with JWT'', \url{https://www.baeldung.com/spring-security-oauth-jwt}
+  \item Angular Blog, ``Introducing Angular Signals'', \url{https://blog.angular.io/}
+\end{enumerate}
+
+% =====================================================================
+%  ANNEXES
+% =====================================================================
+\appendix
+
+\chapter{Configuration \texttt{application.properties}}
+
+\begin{lstlisting}[style=propertiesstyle]
+# === application.properties (commun) ===
+spring.application.name=estore-backend
+spring.profiles.active=dev
+server.port=8080
+
+# JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.open-in-view=false
+
+# MongoDB
+spring.data.mongodb.uri=mongodb://localhost:27017/estore
+
+# JWT
+jwt.secret=change-me-with-a-256-bits-secret-key-for-production
+jwt.expiration=86400000
+
+# === application-dev.properties (H2 in-memory) ===
+spring.datasource.url=jdbc:h2:mem:estore;MODE=MySQL
+spring.datasource.driver-class-name=org.h2.Driver
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled=true
+
+# === application-prod.properties (MySQL) ===
+spring.datasource.url=jdbc:mysql://localhost:3306/estore?createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=root
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+\end{lstlisting}
+
+\chapter{Liste exhaustive des endpoints REST}
+
+\begin{longtable}{p{1.2cm}p{4.5cm}p{6cm}c}
+\caption{Liste complète des endpoints REST}\label{tab:endpoints-full}\\
+\toprule
+\textbf{Verbe} & \textbf{URL} & \textbf{Description} & \textbf{Auth.}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Verbe} & \textbf{URL} & \textbf{Description} & \textbf{Auth.}\\
+\midrule
+\endhead
+POST   & /api/auth/register     & Inscription                  & Public \\
+POST   & /api/auth/login        & Connexion (renvoie JWT)      & Public \\
+GET    & /api/users/me          & Profil courant               & USER \\
+PUT    & /api/users/me          & Mise à jour profil           & USER \\
+GET    & /api/categories        & Liste catégories             & Public \\
+GET    & /api/categories/\{id\} & Détail catégorie             & Public \\
+POST   & /api/categories        & Création                     & ADMIN \\
+PUT    & /api/categories/\{id\} & Modification                 & ADMIN \\
+DELETE & /api/categories/\{id\} & Suppression                  & ADMIN \\
+GET    & /api/products          & Catalogue + filtres + pagination & Public \\
+GET    & /api/products/\{id\}   & Fiche produit                & Public \\
+POST   & /api/products          & Création                     & ADMIN \\
+PUT    & /api/products/\{id\}   & Modification                 & ADMIN \\
+DELETE & /api/products/\{id\}   & Suppression                  & ADMIN \\
+GET    & /api/inventory/\{id\}  & Lecture stock                & Public \\
+PUT    & /api/inventory/\{id\}  & Mise à jour stock            & ADMIN \\
+GET    & /api/cart              & Panier courant               & USER \\
+POST   & /api/cart/add          & Ajout                        & USER \\
+PUT    & /api/cart/update       & Modification quantité        & USER \\
+DELETE & /api/cart/remove/\{id\}& Retrait article              & USER \\
+DELETE & /api/cart/clear        & Vidage                       & USER \\
+POST   & /api/orders            & Validation commande          & USER \\
+GET    & /api/orders            & Historique                   & USER \\
+GET    & /api/orders/\{id\}     & Détail commande              & USER \\
+POST   & /api/reviews           & Dépôt avis                   & USER \\
+GET    & /api/reviews/product/\{id\} & Avis d'un produit        & Public \\
+GET    & /api/reviews/user/\{id\} & Avis d'un utilisateur       & Public \\
+\bottomrule
+\end{longtable}
+
+\chapter{Comptes de test}
+
+Le \texttt{DataSeeder} crée automatiquement deux comptes au premier
+démarrage si la base est vide :
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Rôle} & \textbf{Email} & \textbf{Mot de passe}\\
+\midrule
+ADMIN & admin@estore.ma & Admin@123 \\
+USER  & user@estore.ma  & User@123  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\chapter{Procédure de démarrage rapide}
+
+\begin{lstlisting}[style=shellstyle]
+# 1. Cloner le depot
+git clone https://github.com/akrambelmoussa-etu-byte/e-store.git
+cd e-store
+
+# 2a. Demarrer en mode dev (H2 + Mongo optionnel)
+cd estore-backend
+./mvnw spring-boot:run
+
+# 2b. (Alternative) Demarrer en mode prod
+docker compose up -d
+cd estore-backend
+./mvnw spring-boot:run -Dspring.profiles.active=prod
+
+# 3. Frontend (terminal separe)
+cd estore-frontend
+npm install
+npm start
+
+# 4. Ouvrir http://localhost:4200
+\end{lstlisting}
+
+\end{document}
