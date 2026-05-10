@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(GIT_AUTHOR_EMAIL=akram@estore.ma GIT_AUTHOR_NAME=\"Akram Belmoussa\" GIT_COMMITTER_EMAIL=akram@estore.ma GIT_COMMITTER_NAME=\"Akram Belmoussa\" git rebase --continue)",
+      "Bash(git push *)",
+      "Bash(pip install *)",
+      "Bash(python -c ' *)",
+      "Bash(python generate_cover.py)"
+    ]
+  }
+}
