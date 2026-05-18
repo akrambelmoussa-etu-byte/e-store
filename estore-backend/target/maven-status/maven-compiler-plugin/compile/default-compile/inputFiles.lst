@@ -17,6 +17,7 @@ C:\Users\belmo\studies\Full-stack\E-stor\estore-backend\src\main\java\com\estore
 C:\Users\belmo\studies\Full-stack\E-stor\estore-backend\src\main\java\com\estore\catalog\repository\CategoryRepository.java
 C:\Users\belmo\studies\Full-stack\E-stor\estore-backend\src\main\java\com\estore\catalog\repository\ProductRepository.java
 C:\Users\belmo\studies\Full-stack\E-stor\estore-backend\src\main\java\com\estore\catalog\service\CategoryService.java
+C:\Users\belmo\studies\Full-stack\E-stor\estore-backend\src\main\java\com\estore\catalog\service\GeminiImageService.java
 C:\Users\belmo\studies\Full-stack\E-stor\estore-backend\src\main\java\com\estore\catalog\service\ProductService.java
 C:\Users\belmo\studies\Full-stack\E-stor\estore-backend\src\main\java\com\estore\config\CorsConfig.java
 C:\Users\belmo\studies\Full-stack\E-stor\estore-backend\src\main\java\com\estore\config\DataSeeder.java

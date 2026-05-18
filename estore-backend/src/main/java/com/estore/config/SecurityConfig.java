@@ -56,6 +56,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/inventory/**").permitAll()
+                        // Images générées (servies par Spring static resource handler)
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         // H2 console (profil dev)
                         .requestMatchers("/h2-console/**").permitAll()
                         // Reste : authentifié

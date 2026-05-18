@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -24,10 +26,25 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public Page<ProductDto> search(Long categoryId, String q, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+    public Page<ProductDto> search(Long categoryId,
+                                   String q,
+                                   BigDecimal minPrice,
+                                   BigDecimal maxPrice,
+                                   boolean inStockOnly,
+                                   String sort,
+                                   int page,
+                                   int size) {
+        Pageable pageable = PageRequest.of(page, size, resolveSort(sort));
         String query = (q != null && q.isBlank()) ? null : q;
-        return productRepository.search(categoryId, query, pageable).map(ProductDto::from);
+        return productRepository
+                .search(categoryId, query, minPrice, maxPrice, inStockOnly, pageable)
+                .map(ProductDto::from);
+    }
+
+    /** Compat overload — appelé par d'autres modules qui ne filtrent pas par prix/stock. */
+    @Transactional(readOnly = true)
+    public Page<ProductDto> search(Long categoryId, String q, int page, int size) {
+        return search(categoryId, q, null, null, false, "newest", page, size);
     }
 
     @Transactional(readOnly = true)
@@ -78,9 +95,33 @@ public class ProductService {
         productRepository.delete(get(id));
     }
 
+    /** Met à jour uniquement l'URL d'image — utilisé par GeminiImageService. */
+    @Transactional
+    public ProductDto updateImage(Long id, String imageUrl) {
+        Product p = get(id);
+        p.setImageUrl(imageUrl);
+        return ProductDto.from(productRepository.save(p));
+    }
+
     /** Méthode utilitaire interne. */
     public Product get(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produit introuvable : " + id));
+    }
+
+    /**
+     * Mappe une clé textuelle ("newest", "price_asc"...) vers une {@link Sort} JPA.
+     * Inconnu / null → tri par défaut (plus récent en premier).
+     */
+    private Sort resolveSort(String key) {
+        if (key == null) return Sort.by("id").descending();
+        return switch (key.toLowerCase()) {
+            case "price_asc"  -> Sort.by("price").ascending();
+            case "price_desc" -> Sort.by("price").descending();
+            case "name_asc"   -> Sort.by("name").ascending();
+            case "name_desc"  -> Sort.by("name").descending();
+            case "oldest"     -> Sort.by("id").ascending();
+            default           -> Sort.by("id").descending();
+        };
     }
 }

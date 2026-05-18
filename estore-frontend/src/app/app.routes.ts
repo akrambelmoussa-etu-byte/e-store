@@ -1,14 +1,22 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
-  { path: '', loadComponent: () => import('./features/catalog/product-list.component').then((m) => m.ProductListComponent) },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/catalog/product-list.component').then((m) => m.ProductListComponent)
+  },
   {
     path: 'product/:id',
     loadComponent: () =>
       import('./features/catalog/product-detail.component').then((m) => m.ProductDetailComponent)
   },
-  { path: 'login', loadComponent: () => import('./features/auth/login.component').then((m) => m.LoginComponent) },
+  {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login.component').then((m) => m.LoginComponent)
+  },
   {
     path: 'register',
     loadComponent: () => import('./features/auth/register.component').then((m) => m.RegisterComponent)
@@ -16,6 +24,12 @@ export const routes: Routes = [
   {
     path: 'cart',
     loadComponent: () => import('./features/cart/cart.component').then((m) => m.CartComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'checkout',
+    loadComponent: () =>
+      import('./features/checkout/checkout.component').then((m) => m.CheckoutComponent),
     canActivate: [authGuard]
   },
   {
@@ -27,6 +41,12 @@ export const routes: Routes = [
     path: 'profile',
     loadComponent: () => import('./features/profile/profile.component').then((m) => m.ProfileComponent),
     canActivate: [authGuard]
+  },
+  {
+    path: 'admin/products',
+    loadComponent: () =>
+      import('./features/admin/admin-products.component').then((m) => m.AdminProductsComponent),
+    canActivate: [adminGuard]
   },
   { path: '**', redirectTo: '' }
 ];

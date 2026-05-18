@@ -1,16 +1,88 @@
-/* Styles globaux E-Store */
+/* ──────────────────────────────────────────────────────────
+   E-Store — Design system "Dark Premium"
+   Tokens centralisés → réutilisés par tous les composants.
+   ────────────────────────────────────────────────────────── */
 
-body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background-color: #f5f7fa;
-  color: #212529;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  /* Palette */
+  --bg-base: #0e1012;
+  --bg-elev-1: #14171a;
+  --bg-elev-2: #1c2024;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Typo */
+  --text-primary: #e6e7ea;
+  --text-secondary: #a9adb4;
+  --text-tertiary: #6c7178;
+  --text-inverse: #0e1012;
+
+  /* Accents */
+  --accent-cyan: #22d3ee;
+  --accent-blue: #3b82f6;
+  --accent-violet: #8b5cf6;
+  --accent-grad: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 50%, var(--accent-violet) 100%);
+
+  /* États */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger:  #ef4444;
+  --info:    #06b6d4;
+
+  /* Layout */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --shadow-glow: 0 0 32px rgba(59, 130, 246, 0.18);
+
+  /* Fonts */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
 }
 
-.product-card img {
-  height: 200px;
-  object-fit: cover;
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
+/* Override Bootstrap defaults inside our app shell */
+.app-shell, .app-shell * {
+  font-family: var(--font-body);
+}
+
+.app-shell {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+a { color: inherit; }
+a:hover { color: var(--accent-cyan); }
+
+/* Toast */
 .toast-container {
   position: fixed;
   top: 1rem;
@@ -19,16 +91,147 @@ body {
   max-width: 360px;
 }
 
-.star-rating {
-  color: #ffc107;
-  font-size: 1.1rem;
+/* Utilitaires partagés */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-tertiary);
 }
 
-.cursor-pointer {
-  cursor: pointer;
+.grad-text {
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .section-title {
-  border-left: 4px solid #0d6efd;
-  padding-left: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  margin: 0;
 }
+
+/* Bouton premium réutilisable */
+.btn-premium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--surface-hover);
+    border-color: rgba(255, 255, 255, 0.28);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) { transform: translateY(0); }
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  &.primary {
+    background: var(--accent-grad);
+    border-color: transparent;
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-glow);
+  }
+
+  &.primary:hover:not(:disabled) {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  &.ghost { background: transparent; }
+
+  &.danger {
+    border-color: rgba(239, 68, 68, 0.45);
+    color: #fca5a5;
+  }
+  &.danger:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.7);
+  }
+}
+
+/* Inputs sombres */
+.input-dark, input.form-control, select.form-select, textarea.form-control {
+  background: var(--bg-elev-1) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.55rem 0.85rem !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18) !important;
+    outline: none !important;
+  }
+
+  &::placeholder { color: var(--text-tertiary); }
+}
+
+/* Bootstrap card override pour cohérence sombre */
+.app-shell .card {
+  background: var(--bg-elev-1);
+  color: var(--text-primary);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+}
+
+/* Loader pattern */
+.spinner-dot {
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  border-radius: 50%;
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.4); }
+}
+
+/* Scrollbar discrète */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb {
+  background: var(--bg-elev-2);
+  border-radius: 6px;
+  border: 2px solid var(--bg-base);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* Container fluide */
+.container-app {
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Bootstrap force-dark inside shell */
+.app-shell .navbar,
+.app-shell .modal-content,
+.app-shell .dropdown-menu {
+  background-color: var(--bg-elev-1);
+  color: var(--text-primary);
+  border-color: var(--border-soft);
+}
+
+/* Cursor */
+.cursor-pointer { cursor: pointer; }
